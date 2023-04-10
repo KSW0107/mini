@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import Event.EventService;
+import assignment.assService;
 import user.UserService;
 
 public class HumanSource {
@@ -35,7 +36,7 @@ public class HumanSource {
 				} else if (menu == 2) {
 					reservationMenu();
 				} else if (menu == 3) {
-					
+					assignmentMenu();
 				} else if (menu == 4) {	
 					System.out.println("프로그램 종료");
 					break;
@@ -168,6 +169,28 @@ public class HumanSource {
 	}
 	
 	private void assignmentMenu() {
-		System.out.println("1. 양도등록 | 2.양도확인 | 3.양도신청 | 4.양도수락");
+		System.out.println("1. 양도등록 | 2.전체양도조회 | 3.조건양도조회 | 4.양도신청 | 5. 양도수락 | 6. 뒤로가기");
+		int assMenu = Integer.parseInt(sc.nextLine());
+		assService as = new assService(); 
+		
+		switch(assMenu) {
+		case 1:
+			as.assAdd();
+			break;
+		case 2:
+			as.getAllAssInfo();
+			break;
+		case 3:
+			
+			break;
+		case 4:
+			
+			break;
+		case 5:
+			
+			break;
+		case 6:
+			break;
+		}
 	}
 }
