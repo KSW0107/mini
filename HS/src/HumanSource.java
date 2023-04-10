@@ -166,4 +166,8 @@ public class HumanSource {
 			break;
 		}
 	}
+	
+	private void assignmentMenu() {
+		System.out.println("1. 양도등록 | 2.양도확인 | 3.양도신청 | 4.양도수락");
+	}
 }
