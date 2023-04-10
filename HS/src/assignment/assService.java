@@ -33,4 +33,17 @@ public class assService {
 			System.out.println("----------------------------");
 		}
 	}
+	
+	public void getAssInfo() {
+		System.out.println("양도 조회하려는 행사 이름 입력 > " );
+		String eventName = sc.nextLine();
+		List<assDTO> list = assDAO.getInstance().getAssInfo(eventName);
+		
+		for (assDTO ass : list) {
+			System.out.println("행사 이름 : " + ass.getEventName());
+			System.out.println("양도자 아이디 : " + ass.getUserId());
+			System.out.println("---------------------------");
+		}
+	}
+	
 }

@@ -2,11 +2,13 @@ package assignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import common.DAO;
 
 public class assDAO extends DAO{
 	private static assDAO assDao = new assDAO();
+	Scanner sc = new Scanner(System.in);
 	
 	private assDAO() {};
 	
@@ -66,5 +68,34 @@ public class assDAO extends DAO{
 		return list;
 	}
 	
+	//조건 별 양도 조회
+	public List<assDTO> getAssInfo (String eventName) {
+		List<assDTO> list = new ArrayList<assDTO>();
+		assDTO ass = null;
+		try {
+			conn();
+			String sql = "SELECT * FROM assignment WHERE event_name = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, eventName);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				ass = new assDTO();
+				
+				ass.setEventName(rs.getString("event_name"));
+				ass.setUserId(rs.getString("user_id"));
+				
+				list.add(ass);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		
+		return list;
+	}
 
 }

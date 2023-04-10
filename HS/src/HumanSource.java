@@ -181,7 +181,7 @@ public class HumanSource {
 			as.getAllAssInfo();
 			break;
 		case 3:
-			
+			as.getAssInfo();
 			break;
 		case 4:
 			
