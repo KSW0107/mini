@@ -185,41 +185,41 @@ public class EventDAO extends DAO {
 		return list;
 	}
 
-	//카테고리별 
+	// 카테고리별
 	public List<EventDTO> getCategoryInfo(String eventCategory) {
-	List<EventDTO> list = new ArrayList<EventDTO>();
-	EventDTO event = null;
-	try {
-		conn();
-		String sql = "SELECT * FROM event WHERE event_category = ?";
-		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, eventCategory);
+		List<EventDTO> list = new ArrayList<EventDTO>();
+		EventDTO event = null;
+		try {
+			conn();
+			String sql = "SELECT * FROM event WHERE event_category = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, eventCategory);
 
-		rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 
-		while (rs.next()) {
-			event = new EventDTO();
+			while (rs.next()) {
+				event = new EventDTO();
 
-			event.setEventName(rs.getString("event_name"));
-			event.setEventPlace(rs.getString("event_place"));
-			event.setEventDate(rs.getDate("event_date"));
-			event.setEventTime(rs.getString("event_time"));
-			event.setEventCategory(rs.getString("event_category"));
-			event.setEventmaxPer(rs.getInt("event_maxper"));
-			event.setEventOrg(rs.getString("event_org"));
+				event.setEventName(rs.getString("event_name"));
+				event.setEventPlace(rs.getString("event_place"));
+				event.setEventDate(rs.getDate("event_date"));
+				event.setEventTime(rs.getString("event_time"));
+				event.setEventCategory(rs.getString("event_category"));
+				event.setEventmaxPer(rs.getInt("event_maxper"));
+				event.setEventOrg(rs.getString("event_org"));
 
-			list.add(event);
+				list.add(event);
 
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
 		}
-
-	} catch (Exception e) {
-		e.printStackTrace();
-	} finally {
-		disconn();
+		return list;
 	}
-	return list;
-}
-	
+
 	// 행사 수정
 	// 장소
 	public int EventPlaceUpdate(EventDTO event) {
@@ -260,22 +260,21 @@ public class EventDAO extends DAO {
 		return result;
 	}
 
-	//행사삭제 시 하위 테이블 삭제
+	// 행사삭제 시 하위 테이블 삭제
 	public void tableDelete(String eventName) {
 		try {
 			conn();
-			String sql = "DROP TABLE "+eventName+"_rsv"; // 예약회원 시 삭제
+			String sql = "DROP TABLE " + eventName + "_rsv"; // 예약회원 시 삭제
 			pstmt = conn.prepareStatement(sql);
 			int result = pstmt.executeUpdate();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			disconn();
 		}
 	}
-	
-	
+
 	// 날짜
 	public int EventDateUpdate(EventDTO event) {
 		int result = 0;
@@ -355,59 +354,55 @@ public class EventDAO extends DAO {
 		}
 		return result;
 	}
-	
+
+	// 행사 등록 시 행사예약자 테이블 생성
 	public void addEventTable(EventDTO event) {
 		try {
 			conn();
 			String name = event.getEventName();
-			String sql = "CREATE TABLE "+name+"_rsv ("
+			String sql = "CREATE TABLE " + name + "_rsv ("
 					+ "event_name varchar2(30)REFERENCES event (event_name) ON DELETE CASCADE,"
-					+ "user_id varchar2(30) REFERENCES hs_user(user_id),"
-					+ "user_name varchar2(15),"
+					+ "user_id varchar2(30) REFERENCES hs_user(user_id)," + "user_name varchar2(15),"
 					+ "user_location varchar2(20))";
 			stmt = conn.createStatement();
 			boolean result = stmt.execute(sql);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			disconn();
-		}
-	}
-	
-	
-	//행사 예약 등록
-	public int resevationAdd(UserDTO user , String eventName) {
-		int result = 0;
-		try {
-			conn();
-			String sql = "INSERT INTO "+eventName+"_rsv VALUES (?,?,?,?)";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, eventName);
-			pstmt.setString(2, user.getUserId());
-			pstmt.setString(3, user.getUserName());
-			pstmt.setString(4, user.getUserLocation());
-			
-			
-			result = pstmt.executeUpdate();
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			disconn();
 		}
+	}
 
+	// 행사 예약 등록
+	public int resevationAdd(UserDTO user, String eventName) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "INSERT INTO " + eventName + "_rsv VALUES (?,?,?,?)";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, eventName);
+			pstmt.setString(2, user.getUserId());
+			pstmt.setString(3, user.getUserName());
+			pstmt.setString(4, user.getUserLocation());
+
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
 		return result;
 	}
-	
-	//예약 삭제
+
+	// 예약 삭제
 	public int reservationDelete(String eventName, String userId) {
 		int result = 0;
 		try {
 			conn();
-			String sql = "DELETE FROM "+eventName+"_rsv WHERE user_id = ?"; 
+			String sql = "DELETE FROM " + eventName + "_rsv WHERE user_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
 
@@ -420,20 +415,20 @@ public class EventDAO extends DAO {
 
 		return result;
 	}
-	
-	//행사별 예약자 조회
-	public List<UserDTO> eventInReservation (String eventName) {
+
+	// 행사별 예약자 조회
+	public List<UserDTO> eventInReservation(String eventName) {
 		List<UserDTO> list = new ArrayList<UserDTO>();
 		UserDTO user = null;
 		try {
 			conn();
-			String sql = "SELECT * FROM "+eventName+"_rsv";
+			String sql = "SELECT * FROM " + eventName + "_rsv";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				user = new UserDTO();
-				
+
 				user.setUserId(rs.getString("user_id"));
 				user.setUserName(rs.getString("user_name"));
 				user.setUserLocation(rs.getString("user_location"));
@@ -450,4 +445,28 @@ public class EventDAO extends DAO {
 		return list;
 	}
 
+	//양도 등록 시 아이디+행사명 조회
+	public UserDTO eventInReservation1(String eventName, String userId) {
+		UserDTO user = null;
+		try {
+			conn();
+			String sql = "SELECT * FROM " + eventName + "_rsv WHERE user_id = ?" ;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				user = new UserDTO();
+				user.setUserId(rs.getString("user_id"));
+				user.setUserName(rs.getString("user_name"));
+				user.setUserLocation(rs.getString("user_location"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+		return user;
+	}
 }

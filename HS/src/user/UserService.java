@@ -3,7 +3,7 @@ package user;
 import java.util.Scanner;
 
 public class UserService {
-	public static UserDTO userInfo = null;
+	public static UserDTO userInfo = null; // 로그인 정보
 	Scanner sc = new Scanner(System.in);
 
 	// 로그인
@@ -44,12 +44,29 @@ public class UserService {
 		System.out.println("가입할 회원 거주지역 > ");
 		user.setUserLocation(sc.nextLine());
 
-		int result = UserDAO.getInstance().UserAdd(user);
+		
+			int result = UserDAO.getInstance().UserAdd(user);			
+			if (result == 1) {
+				System.out.println("가입성공");
+			}else {
+				System.out.println("가입실패");
+			}
+		
 
-		if (result == 1) {
-			System.out.println("가입성공");
+	}
+
+	// 내 정보 조회
+	public void myInfo() {
+		System.out.println("비밀번호를 입력하시오 >");
+		String pw = sc.nextLine();
+
+		if (userInfo.getUserPw().equals(pw)) {
+			System.out.println("내 아이디 : " + userInfo.getUserId());
+			System.out.println("내 비밀번호 : " + userInfo.getUserPw());
+			System.out.println("내 이름 : " + userInfo.getUserName());
+			System.out.println("내 거주지 : " + userInfo.getUserLocation());
 		} else {
-			System.out.println("가입실패");
+			System.out.println("비밀번호가 틀렸습니다.");
 		}
 	}
 
@@ -57,53 +74,78 @@ public class UserService {
 	public void UserPwUpdate() {
 		UserDTO user = new UserDTO();
 
-		System.out.println("비밀번호를 수정할 아이디 > ");
-		user.setUserId(sc.nextLine());
-		System.out.println("바꿀 비밀번호 > ");
-		String pw = sc.nextLine();
-		System.out.println("바꿀 비밀 번호 재입력");
-		user.setUserPw(sc.nextLine());
-		if (pw.equals(user.getUserPw())) {
-			int result = UserDAO.getInstance().UserPwUpdate(user);
-			if (result == 1) {
-				System.out.println("비밀번호 변경 완료");
+		System.out.println("현재 비밀번호를 입력하시오 > ");
+		String oldpw = sc.nextLine();
+
+		if (userInfo.getUserPw().equals(oldpw)) {
+			user.setUserId(userInfo.getUserId());
+			System.out.println("바꿀 비밀번호 > ");
+			String newpw = sc.nextLine();
+			System.out.println("바꿀 비밀 번호 재입력 >");
+			String newpw1 = sc.nextLine();
+			if (newpw.equals(newpw1)) {
+				user.setUserPw(newpw);
+				int result = UserDAO.getInstance().UserPwUpdate(user);
+				if (result == 1) {
+					System.out.println("비밀번호 변경 완료");
+					userInfo.setUserPw(newpw);
+				}
+			} else {
+				System.out.println("입력된 비밀번호가 다릅니다");
 			}
 		} else {
-			System.out.println("입력된 비밀번호가 다릅니다");
+			System.out.println("비밀번호가 클렸습니다");
 		}
+
 	}
 
 	public void UserNameUpdate() {
 		UserDTO user = new UserDTO();
 
-		System.out.println("이름을 수정할 아이디 > ");
-		user.setUserId(sc.nextLine());
-		System.out.println("바꿀 이름 > ");
-		user.setUserName(sc.nextLine());
+		System.out.println("현재 비밀번호를 입력하시오 > ");
+		String oldpw = sc.nextLine();
 
-		int result = UserDAO.getInstance().UserNameUpdate(user);
-		
-		if (result == 1) {
-			System.out.println("이름 변경 완료");
+		if (userInfo.getUserPw().equals(oldpw)) {
+			user.setUserId(userInfo.getUserId());
+			System.out.println("바꿀 이름 > ");
+			String newName = sc.nextLine();
+			user.setUserName(newName);
+
+			int result = UserDAO.getInstance().UserNameUpdate(user);
+
+			if (result == 1) {
+				System.out.println("이름 변경 완료");
+				userInfo.setUserName(newName);
+			} else {
+				System.out.println("이름 변경 실패");
+			}
 		} else {
-			System.out.println("이름 변경 실패");
+			System.out.println("비밀번호가 틀렸습니다");
 		}
 	}
-	
+
 	public void UserLocationUpdate() {
 		UserDTO user = new UserDTO();
 
-		System.out.println("거주지역을 수정할 아이디 > ");
-		user.setUserId(sc.nextLine());
-		System.out.println("바꿀 거주지역 > ");
-		user.setUserLocation(sc.nextLine());
+		System.out.println("현재 비밀번호를 입력하시오 > ");
+		String oldpw = sc.nextLine();
 
-		int result = UserDAO.getInstance().UserLocationUpdate(user);
-		
-		if (result == 1) {
-			System.out.println("거주지역 변경 완료");
+		if (userInfo.getUserPw().equals(oldpw)) {
+			user.setUserId(userInfo.getUserId());
+			System.out.println("바꿀 거주지역 > ");
+			String newLocation = sc.nextLine();
+			user.setUserLocation(newLocation);
+
+			int result = UserDAO.getInstance().UserLocationUpdate(user);
+
+			if (result == 1) {
+				System.out.println("거주지역 변경 완료");
+				userInfo.setUserLocation(newLocation);
+			} else {
+				System.out.println("거주지역 변경 실패");
+			}
 		} else {
-			System.out.println("거주지역 변경 실패");
+			System.out.println("비밀번호가 틀렸습니다");
 		}
 	}
 

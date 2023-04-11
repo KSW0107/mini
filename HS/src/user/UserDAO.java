@@ -4,7 +4,7 @@ import common.DAO;
 
 public class UserDAO extends DAO{
 	private static UserDAO userDao = new UserDAO();
-	
+
 	private UserDAO() {};
 	
 	//싱글톤
@@ -19,7 +19,7 @@ public class UserDAO extends DAO{
 	//로그인
 	public UserDTO login(String id) {
 		UserDTO user = null;
-		
+
 		try {
 			conn();
 			String sql = "SELECT * FROM hs_user WHERE user_id = ?";
@@ -67,6 +67,33 @@ public class UserDAO extends DAO{
 		}
 		
 		return result;
+	}
+	
+	//회원조회
+	public UserDTO userInfo(String userId) {
+		UserDTO user = null;
+		try {
+			conn();
+			String sql = "SELECT * FROM hs_user WHERE user_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				user = new UserDTO();
+				
+				user.setUserId(rs.getString("user_id"));
+				user.setUserName(rs.getString("user_name"));
+				user.setUserLocation(rs.getString("user_location"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return user;
 	}
 	
 	//회원 수정

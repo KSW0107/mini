@@ -3,6 +3,8 @@ package assignment;
 public class assDTO {
 	private String eventName;
 	private String userId;
+	private String title;
+	
 	
 	public String getEventName() {
 		return eventName;
@@ -15,6 +17,12 @@ public class assDTO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	
