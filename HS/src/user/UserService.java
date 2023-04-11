@@ -36,21 +36,29 @@ public class UserService {
 		UserDTO user = new UserDTO();
 
 		System.out.println("가입할 회원 아이디 > ");
-		user.setUserId(sc.nextLine());
-		System.out.println("가입할 회원 비밀번호 > ");
-		user.setUserPw(sc.nextLine());
-		System.out.println("가입할 회원 이름 > ");
-		user.setUserName(sc.nextLine());
-		System.out.println("가입할 회원 거주지역 > ");
-		user.setUserLocation(sc.nextLine());
-
+		String id = sc.nextLine();
 		
+		if(UserDAO.getInstance().userInfo(id) == null) {
+			user.setUserId(id);
+			
+			System.out.println("가입할 회원 비밀번호 > ");
+			user.setUserPw(sc.nextLine());
+			System.out.println("가입할 회원 이름 > ");
+			user.setUserName(sc.nextLine());
+			System.out.println("가입할 회원 거주지역 > ");
+			user.setUserLocation(sc.nextLine());
+			
+			
 			int result = UserDAO.getInstance().UserAdd(user);			
 			if (result == 1) {
 				System.out.println("가입성공");
 			}else {
 				System.out.println("가입실패");
 			}
+			
+		}else {
+			System.out.println("이미 존재하는 아이디 입니다");
+		}
 		
 
 	}
