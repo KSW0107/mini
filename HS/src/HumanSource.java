@@ -11,6 +11,7 @@ public class HumanSource {
 	int udtmenu = 0;
 	UserService us = new UserService();
 	EventService es = new EventService();
+	assService as = new assService();
 
 	public HumanSource() {
 		Job();
@@ -28,7 +29,7 @@ public class HumanSource {
 					System.out.println("프로그램을 종료합니다");
 					break;
 				} else {
-					System.out.println("잘못된 입력입니다");
+					System.out.println("잘못된 메뉴 선택입니다");
 				}
 			} else {
 				if (menu == 1) {
@@ -43,7 +44,7 @@ public class HumanSource {
 					System.out.println("프로그램을 종료합니다");
 					break;
 				} else {
-					System.out.println("잘못된 입력입니다");
+					System.out.println("잘못된 메뉴 선택입니다");
 				}
 			}
 		}
@@ -64,7 +65,7 @@ public class HumanSource {
 	private void changeSelfMenu() {
 		boolean flag = true;
 		while (flag == true) {
-			System.out.println("1. 내 정보조회 | 2. 비밀번호 수정 | 3. 이름 수정 | 4. 거주지 수정 | 5. 뒤로가기");
+			System.out.println("1. 내 정보조회 | 2. 비밀번호 수정 | 3. 이름 수정 | 4. 거주지 수정 | 5. 로그아웃 | 6. 뒤로가기");
 			int menu = Integer.parseInt(sc.nextLine());
 
 			switch (menu) {
@@ -81,9 +82,13 @@ public class HumanSource {
 				us.UserLocationUpdate();
 				break;
 			case 5:
+				us.logout();
+				flag = false;
+				break;
+			case 6:
 				flag = false;
 			default:
-				System.out.println("입력 오류");
+				System.out.println("잘못된 메뉴 선택입니다");
 
 			}
 		}
@@ -165,7 +170,7 @@ public class HumanSource {
 				fleg = false;
 				break;
 			default:
-				System.out.println("입력 오류");
+				System.out.println("잘못된 메뉴 선택입니다");
 			}
 		}
 	}
@@ -219,7 +224,7 @@ public class HumanSource {
 				fleg = false;
 				break;
 			default:
-				System.out.println("잘못된 입력입니다.");
+				System.out.println("잘못된 메뉴 선택입니다");
 			}
 		}
 	}
@@ -227,11 +232,33 @@ public class HumanSource {
 	private void assignmentMenu() {
 		boolean fleg = true;
 		while (fleg) {
-			System.out.println("1. 양도하기 등록 | 2.전체 양도하기 조회 | 3.조건 양도하기 조회 | 4.양도받기 신청 | 5.양도받기 조회 | 6. 양도하기 | 7. 뒤로가기");
+			System.out.println("1. 양도하기 관리 | 2.양도받기 관리 | 3. 뒤로가기");
 			int assMenu = Integer.parseInt(sc.nextLine());
-			assService as = new assService();
 
 			switch (assMenu) {
+			case 1:
+				assGiveMenu();
+				break;
+			case 2:
+				assReceiveMenu();
+				break;
+			case 3:
+				fleg = false;
+				break;
+			default:
+				System.out.println("잘못된 메뉴 선택입니다");
+			}
+
+		}
+	}
+
+	public void assGiveMenu() {
+		boolean fleg = true;
+		while (fleg) {
+			System.out.println("1. 양도하기 등록 | 2. 전체 양도하기 조회 | 3. 조건 양도하기 조회 | 4. 양도하기 취소 | 5. 양도하기 | 6. 뒤로가기 ");
+			int menu = Integer.parseInt(sc.nextLine());
+
+			switch (menu) {
 			case 1:
 				as.assAdd();
 				break;
@@ -242,15 +269,37 @@ public class HumanSource {
 				as.getAssInfo();
 				break;
 			case 4:
-				as.assAppAdd();
+				as.deleteAss();
 				break;
 			case 5:
-				as.getAssAppInfo();
-				break;
-			case 6:
 				as.changeReservation();
 				break;
-			case 7:
+			case 6:
+				fleg = false;
+				break;
+			default:
+				System.out.println("잘못된 메뉴 선택입니다");
+			}
+		}
+	}
+
+	public void assReceiveMenu() {
+		boolean fleg = true;
+		while (fleg) {
+			System.out.println("1. 양도받기 신청 | 2. 양도받기 조회 | 3. 양도받기 취소 | 4. 뒤로가기");
+			int menu = Integer.parseInt(sc.nextLine());
+
+			switch (menu) {
+			case 1:
+				as.assAppAdd();
+				break;
+			case 2:
+				as.getAssAppInfo();
+				break;
+			case 3:
+				//as 구현해야함
+				break;
+			case 4:
 				fleg = false;
 				break;
 			default:

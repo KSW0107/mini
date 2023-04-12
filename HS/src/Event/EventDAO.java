@@ -48,6 +48,25 @@ public class EventDAO extends DAO {
 		return result;
 	}
 
+	// 행사 등록 시 행사예약자 테이블 생성
+	public void addEventTable(EventDTO event) {
+		try {
+			conn();
+			String name = event.getEventName();
+			String sql = "CREATE TABLE " + name + "_rsv ("
+					+ "event_name varchar2(30)REFERENCES event (event_name) ON DELETE CASCADE,"
+					+ "user_id varchar2(30) REFERENCES hs_user(user_id)," + "user_name varchar2(15),"
+					+ "user_location varchar2(20))";
+			stmt = conn.createStatement();
+			boolean result = stmt.execute(sql);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+	}
+
 	// 행사 전체 조회
 	public List<EventDTO> getAllEventInfo() {
 		List<EventDTO> list = new ArrayList<EventDTO>();
@@ -113,6 +132,7 @@ public class EventDAO extends DAO {
 		}
 		return event;
 	}
+	
 
 	// 행사 조건 조회
 	// 장소별
@@ -241,40 +261,6 @@ public class EventDAO extends DAO {
 		return result;
 	}
 
-	// 행사 삭제
-	public int EventDelete(String eventName) {
-		int result = 0;
-		try {
-			conn();
-			String sql = "DELETE FROM event WHERE event_name = ?"; // 예약회원 시 삭제
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, eventName);
-
-			result = pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disconn();
-		}
-		tableDelete(eventName);
-		return result;
-	}
-
-	// 행사삭제 시 하위 테이블 삭제
-	public void tableDelete(String eventName) {
-		try {
-			conn();
-			String sql = "DROP TABLE " + eventName + "_rsv"; // 예약회원 시 삭제
-			pstmt = conn.prepareStatement(sql);
-			int result = pstmt.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disconn();
-		}
-	}
-
 	// 날짜
 	public int EventDateUpdate(EventDTO event) {
 		int result = 0;
@@ -355,17 +341,32 @@ public class EventDAO extends DAO {
 		return result;
 	}
 
-	// 행사 등록 시 행사예약자 테이블 생성
-	public void addEventTable(EventDTO event) {
+	// 행사 삭제
+	public int EventDelete(String eventName) {
+		int result = 0;
 		try {
 			conn();
-			String name = event.getEventName();
-			String sql = "CREATE TABLE " + name + "_rsv ("
-					+ "event_name varchar2(30)REFERENCES event (event_name) ON DELETE CASCADE,"
-					+ "user_id varchar2(30) REFERENCES hs_user(user_id)," + "user_name varchar2(15),"
-					+ "user_location varchar2(20))";
-			stmt = conn.createStatement();
-			boolean result = stmt.execute(sql);
+			String sql = "DELETE FROM event WHERE event_name = ?"; // 예약회원 시 삭제
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, eventName);
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+		tableDelete(eventName);
+		return result;
+	}
+
+	// 행사삭제 시 하위 테이블 삭제
+	public void tableDelete(String eventName) {
+		try {
+			conn();
+			String sql = "DROP TABLE " + eventName + "_rsv"; // 예약회원 시 삭제
+			pstmt = conn.prepareStatement(sql);
+			int result = pstmt.executeUpdate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -397,26 +398,7 @@ public class EventDAO extends DAO {
 		return result;
 	}
 
-	// 예약 삭제
-	public int reservationDelete(String eventName, String userId) {
-		int result = 0;
-		try {
-			conn();
-			String sql = "DELETE FROM " + eventName + "_rsv WHERE user_id = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
-
-			result = pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			disconn();
-		}
-
-		return result;
-	}
-
-	// 행사별 예약자 조회
+	//예약자 조회
 	public List<UserDTO> eventInReservation(String eventName) {
 		List<UserDTO> list = new ArrayList<UserDTO>();
 		UserDTO user = null;
@@ -444,13 +426,31 @@ public class EventDAO extends DAO {
 		}
 		return list;
 	}
+	
+	// 예약 삭제
+	public int reservationDelete(String eventName, String userId) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "DELETE FROM " + eventName + "_rsv WHERE user_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
 
-	//양도 등록 시 아이디+행사명 조회
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+
+		return result;
+	}
+	// 양도 등록 시 아이디+행사명 조회
 	public UserDTO eventInReservation1(String eventName, String userId) {
 		UserDTO user = null;
 		try {
 			conn();
-			String sql = "SELECT * FROM " + eventName + "_rsv WHERE user_id = ?" ;
+			String sql = "SELECT * FROM " + eventName + "_rsv WHERE user_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
 			rs = pstmt.executeQuery();

@@ -15,7 +15,6 @@ public class UserDAO extends DAO{
 		return userDao;
 	}
 	
-	
 	//로그인
 	public UserDTO login(String id) {
 		UserDTO user = null;
@@ -43,8 +42,7 @@ public class UserDAO extends DAO{
 		}
 		return user;
 	}
-	
-	
+		
 	//회원 등록
 	public int UserAdd(UserDTO user) {
 		int result = 0;
@@ -97,6 +95,7 @@ public class UserDAO extends DAO{
 	}
 	
 	//회원 수정
+	//비밀번호 수정
 	public int UserPwUpdate(UserDTO user) {
 		int result = 0;
 		try {
@@ -117,6 +116,7 @@ public class UserDAO extends DAO{
 		return result;
 	}
 	
+	//이름 수정
 	public int UserNameUpdate(UserDTO user) {
 		int result = 0;
 		try {
@@ -137,6 +137,7 @@ public class UserDAO extends DAO{
 		return result;
 	}
 	
+	//거주지 수정
 	public int UserLocationUpdate(UserDTO user) {
 		int result = 0;
 		try {

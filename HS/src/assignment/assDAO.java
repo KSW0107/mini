@@ -66,7 +66,36 @@ public class assDAO extends DAO{
 		}
 	}
 	
-	
+	//등록시 중복 확인 (아이디+행사명)
+		public assDTO getAssInfo1 (String eventName, String userId) {
+			assDTO ass = null;
+			try {
+				conn();
+				String sql = "SELECT * FROM assignment WHERE event_name = ? AND user_id = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, eventName);
+				pstmt.setString(2, userId);
+				
+				rs = pstmt.executeQuery();
+				
+				if (rs.next()) {
+					ass = new assDTO();
+					
+					ass.setEventName(rs.getString("event_name"));
+					ass.setUserId(rs.getString("user_id"));
+					ass.setTitle(rs.getString("title"));
+					
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				disconn();
+			}
+			
+			return ass;
+		}
+		
 	//양도 조회
 	public List<assDTO> getAllAssInfo() {
 		List<assDTO> list = new ArrayList<>();
@@ -98,7 +127,7 @@ public class assDAO extends DAO{
 	
 	//조건 별 양도 조회
 	public List<assDTO> getAssInfo (String eventName) {
-		List<assDTO> list = new ArrayList<assDTO>();
+		List<assDTO> list = null;
 		assDTO ass = null;
 		try {
 			conn();
@@ -107,6 +136,9 @@ public class assDAO extends DAO{
 			pstmt.setString(1, eventName);
 			
 			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				list = new ArrayList<assDTO>();
+			}
 			
 			while (rs.next()) {
 				ass = new assDTO();
@@ -127,15 +159,14 @@ public class assDAO extends DAO{
 		return list;
 	}
 	
-	//등록시 중복 확인 아이디+행사명
-	public assDTO getAssInfo1 (String eventName, String userId) {
+	//조건 별 양도 조회 (제목)
+	public assDTO getAssInfoTitle (String title) {
 		assDTO ass = null;
 		try {
 			conn();
-			String sql = "SELECT * FROM assignment WHERE event_name = ? AND user_id = ?";
+			String sql = "SELECT * FROM assignment WHERE title = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, eventName);
-			pstmt.setString(2, userId);
+			pstmt.setString(1, title);
 			
 			rs = pstmt.executeQuery();
 			
@@ -145,7 +176,6 @@ public class assDAO extends DAO{
 				ass.setEventName(rs.getString("event_name"));
 				ass.setUserId(rs.getString("user_id"));
 				ass.setTitle(rs.getString("title"));
-				
 			}
 			
 		} catch (Exception e) {
@@ -153,13 +183,31 @@ public class assDAO extends DAO{
 		}finally {
 			disconn();
 		}
-		
 		return ass;
+	}
+	
+	//양도하기 삭제
+	public int deleteAss(String title) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "DELETE assignment WHERE title = ?"; // 예약회원 시 삭제
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			disconn();
+		}
+		return result;
 	}
 	
 	//양도신청자 조회
 	public List<assAppDTO> getAssAppInfo (String title) {
-		List<assAppDTO> list = new ArrayList<assAppDTO>();
+		List<assAppDTO> list = null;
 		assAppDTO assApp = null;
 		try {
 			conn();
@@ -167,6 +215,9 @@ public class assDAO extends DAO{
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
+			if(rs.next()) {
+				list = new ArrayList<assAppDTO>();
+			}
 			while (rs.next()) {
 				assApp = new assAppDTO();
 				
@@ -187,13 +238,14 @@ public class assDAO extends DAO{
 		return list;
 	}
 	
-	//양도신청자 아이디로 조회
+	//양도신청자 (아이디 + 타이틀)
 	public assAppDTO assAppIdInfo(String appUserId, String title) {
 		assAppDTO assApp = null;
 		try {
 			conn();
-			String sql = "SELECT * FROM "+title+"_app WHERE user_id = "+appUserId;
+			String sql = "SELECT * FROM "+title+"_app WHERE user_id = ?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, appUserId);
 			rs  = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -286,6 +338,8 @@ public class assDAO extends DAO{
 		} finally {
 			disconn();
 		}
+		
+		
 	}
 	
 }
