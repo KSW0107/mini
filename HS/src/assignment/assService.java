@@ -65,7 +65,7 @@ public class assService {
 	// 조건양도조회
 	public void getAssInfo() {
 		es.getAllEventInfoSimple();
-		System.out.println("양도 조회하려는 행사 이름을 입력하시오 > ");
+		System.out.println("양도하기 조회하려는 행사 이름을 입력하시오 > ");
 		String eventName = sc.nextLine();
 		if (EventDAO.getInstance().getEventInfo(eventName) != null) {
 			List<assDTO> list = assDAO.getInstance().getAssInfo(eventName);
@@ -137,7 +137,7 @@ public class assService {
 		getAllAssInfoSimple();
 		assDTO ass = new assDTO();
 		UserDTO user = UserService.userInfo;
-		System.out.println("양도등록할 게시글 제목을 입력하시오 > ");
+		System.out.println("양도받기를 등록할 게시글 제목을 입력하시오 > ");
 		String title = sc.nextLine();
 		if (assDAO.getInstance().getAssInfoTitle(title) != null) {
 			if (assDAO.getInstance().assAppIdInfo(user.getUserId(), title) == null) {
@@ -176,7 +176,7 @@ public class assService {
 		getAllAssInfoSimple();
 		assDTO ass = new assDTO();
 		UserDTO user = UserService.userInfo;
-		System.out.println("양도 할 게시글 제목을 입력하시오 >");
+		System.out.println("양도하기 할 게시글 제목을 입력하시오 >");
 		String title = sc.nextLine();
 		if (assDAO.getInstance().getAssInfoTitle(title) != null) {
 			getAssAppInfoSimple(title);
